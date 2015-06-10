@@ -125,7 +125,7 @@ int CheckVerticalPosition(int width,int height){
 }
 
 void ofxCubeTexture::loadData(const unsigned char* const data, int w, int h, int glFormat){
-	ofSetPixelStorei(w,1,ofGetNumChannelsFromGLFormat(glFormat));
+	ofSetPixelStoreiAlignment(GL_UNPACK_ALIGNMENT,w,1,ofGetNumChannelsFromGLFormat(glFormat));
 	int num=CheckVerticalPosition(w, h);
 	if(num==0){
 		loadData(data,data,data,data,data,data, w, h, glFormat, GL_UNSIGNED_BYTE);
@@ -135,7 +135,7 @@ void ofxCubeTexture::loadData(const unsigned char* const data, int w, int h, int
 	}
 }
 void ofxCubeTexture::loadData(const unsigned short* data, int w, int h, int glFormat){
-	ofSetPixelStorei(w,2,ofGetNumChannelsFromGLFormat(glFormat));
+	ofSetPixelStoreiAlignment(GL_UNPACK_ALIGNMENT,w,2,ofGetNumChannelsFromGLFormat(glFormat));
 	int num=CheckVerticalPosition(w, h);
 	if(num==0){
 		loadData(data,data,data,data,data,data, w, h, glFormat, GL_UNSIGNED_SHORT);
@@ -145,7 +145,7 @@ void ofxCubeTexture::loadData(const unsigned short* data, int w, int h, int glFo
 	}
 }
 void ofxCubeTexture::loadData(const float* data, int w, int h, int glFormat){
-	ofSetPixelStorei(w,4,ofGetNumChannelsFromGLFormat(glFormat));
+	ofSetPixelStoreiAlignment(GL_UNPACK_ALIGNMENT,w,4,ofGetNumChannelsFromGLFormat(glFormat));
 	int num=CheckVerticalPosition(w, h);
 	if(num==0){
 		loadData(data,data,data,data,data,data, w, h, glFormat, GL_FLOAT);
@@ -179,15 +179,15 @@ void ofxCubeTexture::loadData(const ofFloatPixels & pix, int glFormat){
 //------------------------------------------------------------------------------------
 
 void ofxCubeTexture::loadData(const unsigned char* const data_positive_x,const unsigned char* const data_negative_x,const unsigned char* const data_positive_y,const unsigned char* const data_negative_y,const unsigned char* const data_positive_z,const unsigned char* const data_negative_z, int w, int h, int glFormat){
-	ofSetPixelStorei(w,1,ofGetNumChannelsFromGLFormat(glFormat));
+	ofSetPixelStoreiAlignment(GL_UNPACK_ALIGNMENT,w,1,ofGetNumChannelsFromGLFormat(glFormat));
 	loadData(data_positive_x,data_negative_x,data_positive_y,data_negative_y,data_positive_z,data_negative_z, w, h, glFormat, GL_UNSIGNED_BYTE);
 }
 void ofxCubeTexture::loadData(const unsigned short* data_positive_x,const unsigned short* data_negative_x,const unsigned short* data_positive_y,const unsigned short* data_negative_y,const unsigned short* data_positive_z,const unsigned short* data_negative_z, int w, int h, int glFormat){
-	ofSetPixelStorei(w,2,ofGetNumChannelsFromGLFormat(glFormat));
+	ofSetPixelStoreiAlignment(GL_UNPACK_ALIGNMENT,w,2,ofGetNumChannelsFromGLFormat(glFormat));
 	loadData(data_positive_x,data_negative_x,data_positive_y,data_negative_y,data_positive_z,data_negative_z, w, h, glFormat, GL_UNSIGNED_SHORT);
 }
 void ofxCubeTexture::loadData(const float* data_positive_x,const float* data_negative_x,const float* data_positive_y,const float* data_negative_y,const float* data_positive_z,const float* data_negative_z, int w, int h, int glFormat){
-	ofSetPixelStorei(w,4,ofGetNumChannelsFromGLFormat(glFormat));
+	ofSetPixelStoreiAlignment(GL_UNPACK_ALIGNMENT,w,4,ofGetNumChannelsFromGLFormat(glFormat));
 	loadData(data_positive_x,data_negative_x,data_positive_y,data_negative_y,data_positive_z,data_negative_z, w, h, glFormat, GL_FLOAT);
 }
 
@@ -220,12 +220,15 @@ void ofxCubeTexture::allocate(const ofTextureData & textureData, int glFormat, i
 	texData.magFilter=GL_LINEAR;
 	texData.minFilter=GL_LINEAR_MIPMAP_LINEAR;
 	texData.bFlipTexture=false;
+	texData.tex_w = texData.width;
+	texData.tex_h = texData.height;
+	texData.tex_t = texData.width;
+	texData.tex_u = texData.height;
 
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 
 	ofTexture::allocate(texData,glFormat,pixelType);
 
-	enableTextureTarget(0);
 	glBindTexture(texData.textureTarget, (GLuint)texData.textureID);
 
 	
@@ -250,7 +253,7 @@ void ofxCubeTexture::allocate(const ofTextureData & textureData, int glFormat, i
 			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 		}
 	#endif
-	disableTextureTarget(0);
+	glBindTexture(texData.textureTarget,0);
 }
 
 //---------------------------------------------------------------------------------------

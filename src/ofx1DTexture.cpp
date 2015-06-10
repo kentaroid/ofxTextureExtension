@@ -1,16 +1,18 @@
 #include "ofx1DTexture.h"
 #include "ofImage.h"
 
-
 void ofx1DTexture::allocate(const ofTextureData & textureData, int glFormat, int pixelType){
 	texData=textureData;
 	texData.textureTarget = GL_TEXTURE_1D;
 	texData.bFlipTexture=false;
+	texData.tex_w = texData.width;
+	texData.tex_h = texData.height;
+	texData.tex_t = texData.width;
+	texData.tex_u = texData.height;
 
 	//for generate Texture ID and manage memories; 
 	ofTexture::allocate(texData,glFormat,pixelType);
 
-	enableTextureTarget(0);
 	glBindTexture(texData.textureTarget, (GLuint)texData.textureID);
 	glTexImage1D(texData.textureTarget, 0, texData.glTypeInternal, (GLint)texData.tex_w,  0, glFormat, pixelType, 0);  // init to black...
 
@@ -25,12 +27,12 @@ void ofx1DTexture::allocate(const ofTextureData & textureData, int glFormat, int
 			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 		}
 	#endif
-	disableTextureTarget(0);
+	glBindTexture(texData.textureTarget,0);
 }
 
 /*
 void ofx1DTexture::loadData(const ofPixels & pix){
-	ofSetPixelStorei(pix.getBytesStride());
+	ofSetPixelStoreiAlignment(GL_UNPACK_ALIGNMENT,pix.getBytesStride());
 	loadData(pix.getPixels(), pix.getWidth(), pix.getHeight(), ofGetGlFormat(pix), ofGetGlType(pix));
 }
 */
@@ -63,61 +65,56 @@ void ofx1DTexture::loadData(const void * data, int w, int h, int glFormat, int g
 	generateMipmap();
 }
 
-
-
-
-
-
 //----------------------------------------------------------
 void ofx1DTexture::loadData(const unsigned char * data, int w, int h, int glFormat){
-	ofSetPixelStorei(w,1,ofGetNumChannelsFromGLFormat(glFormat));
+	ofSetPixelStoreiAlignment(GL_UNPACK_ALIGNMENT,w,1,ofGetNumChannelsFromGLFormat(glFormat));
 	loadData(data, w, h, glFormat, GL_UNSIGNED_BYTE);
 }
 
 //----------------------------------------------------------
 void ofx1DTexture::loadData(const unsigned short * data, int w, int h, int glFormat){
-	ofSetPixelStorei(w,2,ofGetNumChannelsFromGLFormat(glFormat));
+	ofSetPixelStoreiAlignment(GL_UNPACK_ALIGNMENT,w,2,ofGetNumChannelsFromGLFormat(glFormat));
 	loadData(data, w, h, glFormat, GL_UNSIGNED_SHORT);
 }
 
 //----------------------------------------------------------
 void ofx1DTexture::loadData(const float * data, int w, int h, int glFormat){
-	ofSetPixelStorei(w,4,ofGetNumChannelsFromGLFormat(glFormat));
+	ofSetPixelStoreiAlignment(GL_UNPACK_ALIGNMENT,w,4,ofGetNumChannelsFromGLFormat(glFormat));
 	loadData(data, w, h, glFormat, GL_FLOAT);
 }
 
 //----------------------------------------------------------
 void ofx1DTexture::loadData(const ofPixels & pix){
-	ofSetPixelStorei(pix.getBytesStride());
+	ofSetPixelStoreiAlignment(GL_UNPACK_ALIGNMENT,pix.getBytesStride());
 	loadData(pix.getData(), pix.getWidth(), pix.getHeight(), ofGetGlFormat(pix), ofGetGlType(pix));
 }
 
 //----------------------------------------------------------
 void ofx1DTexture::loadData(const ofShortPixels & pix){
-	ofSetPixelStorei(pix.getBytesStride());
+	ofSetPixelStoreiAlignment(GL_UNPACK_ALIGNMENT,pix.getBytesStride());
 	loadData(pix.getData(), pix.getWidth(), pix.getHeight(), ofGetGlFormat(pix), ofGetGlType(pix));
 }
 
 //----------------------------------------------------------
 void ofx1DTexture::loadData(const ofFloatPixels & pix){
-	ofSetPixelStorei(pix.getBytesStride());
+	ofSetPixelStoreiAlignment(GL_UNPACK_ALIGNMENT,pix.getBytesStride());
 	loadData(pix.getData(), pix.getWidth(), pix.getHeight(), ofGetGlFormat(pix), ofGetGlType(pix));
 }
 
 //----------------------------------------------------------
 void ofx1DTexture::loadData(const ofPixels & pix, int glFormat){
-	ofSetPixelStorei(pix.getWidth(),pix.getBytesPerChannel(),ofGetNumChannelsFromGLFormat(glFormat));
+	ofSetPixelStoreiAlignment(GL_UNPACK_ALIGNMENT,pix.getWidth(),pix.getBytesPerChannel(),ofGetNumChannelsFromGLFormat(glFormat));
 	loadData(pix.getData(), pix.getWidth(), pix.getHeight(), glFormat, ofGetGlType(pix));
 }
 
 //----------------------------------------------------------
 void ofx1DTexture::loadData(const ofShortPixels & pix, int glFormat){
-	ofSetPixelStorei(pix.getWidth(),pix.getBytesPerChannel(),ofGetNumChannelsFromGLFormat(glFormat));
+	ofSetPixelStoreiAlignment(GL_UNPACK_ALIGNMENT,pix.getWidth(),pix.getBytesPerChannel(),ofGetNumChannelsFromGLFormat(glFormat));
 	loadData(pix.getData(), pix.getWidth(), pix.getHeight(), glFormat, ofGetGlType(pix));
 }
 
 //----------------------------------------------------------
 void ofx1DTexture::loadData(const ofFloatPixels & pix, int glFormat){
-	ofSetPixelStorei(pix.getWidth(),pix.getBytesPerChannel(),ofGetNumChannelsFromGLFormat(glFormat));
+	ofSetPixelStoreiAlignment(GL_UNPACK_ALIGNMENT,pix.getWidth(),pix.getBytesPerChannel(),ofGetNumChannelsFromGLFormat(glFormat));
 	loadData(pix.getData(), pix.getWidth(), pix.getHeight(), glFormat, ofGetGlType(pix));
 }
