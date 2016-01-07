@@ -14,7 +14,7 @@ void ofx1DTexture::allocate(const ofTextureData & textureData, int glFormat, int
 	ofTexture::allocate(texData,glFormat,pixelType);
 
 	glBindTexture(texData.textureTarget, (GLuint)texData.textureID);
-	glTexImage1D(texData.textureTarget, 0, texData.glTypeInternal, (GLint)texData.tex_w,  0, glFormat, pixelType, 0);  // init to black...
+	glTexImage1D(texData.textureTarget, 0, texData.glInternalFormat, (GLint)texData.tex_w,  0, glFormat, pixelType, 0);  // init to black...
 
 	glTexParameterf(texData.textureTarget, GL_TEXTURE_MAG_FILTER, texData.magFilter);
 	glTexParameterf(texData.textureTarget, GL_TEXTURE_MIN_FILTER, texData.minFilter);

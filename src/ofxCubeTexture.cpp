@@ -35,6 +35,8 @@ namespace ofxCubeTexShader{
 		));
 		_cubeShader.linkProgram();
 		bLoadedShader=true;
+
+		
 	}
 };
 
@@ -232,12 +234,12 @@ void ofxCubeTexture::allocate(const ofTextureData & textureData, int glFormat, i
 	glBindTexture(texData.textureTarget, (GLuint)texData.textureID);
 
 	
-	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, texData.glTypeInternal, (GLint)texData.tex_w, (GLint)texData.tex_h, 0, glFormat, pixelType, 0);
-	glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, texData.glTypeInternal, (GLint)texData.tex_w, (GLint)texData.tex_h, 0, glFormat, pixelType, 0);
-	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, texData.glTypeInternal, (GLint)texData.tex_w, (GLint)texData.tex_h, 0, glFormat, pixelType, 0);
-	glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, texData.glTypeInternal, (GLint)texData.tex_w, (GLint)texData.tex_h, 0, glFormat, pixelType, 0);
-	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, texData.glTypeInternal, (GLint)texData.tex_w, (GLint)texData.tex_h, 0, glFormat, pixelType, 0);
-	glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, texData.glTypeInternal, (GLint)texData.tex_w, (GLint)texData.tex_h, 0, glFormat, pixelType, 0);
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, texData.glInternalFormat, (GLint)texData.tex_w, (GLint)texData.tex_h, 0, glFormat, pixelType, 0);
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, texData.glInternalFormat, (GLint)texData.tex_w, (GLint)texData.tex_h, 0, glFormat, pixelType, 0);
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, texData.glInternalFormat, (GLint)texData.tex_w, (GLint)texData.tex_h, 0, glFormat, pixelType, 0);
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, texData.glInternalFormat, (GLint)texData.tex_w, (GLint)texData.tex_h, 0, glFormat, pixelType, 0);
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, texData.glInternalFormat, (GLint)texData.tex_w, (GLint)texData.tex_h, 0, glFormat, pixelType, 0);
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, texData.glInternalFormat, (GLint)texData.tex_w, (GLint)texData.tex_h, 0, glFormat, pixelType, 0);
 
 
 	glTexParameterf( texData.textureTarget, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -263,7 +265,7 @@ void ofxCubeTexture::loadData(const void * data_positive_x, const void * data_ne
 		if(!isAllocated()){
 			ofTexture::allocate(w, h, glFormat , glFormat, glType);
 		}else{
-			ofTexture::allocate(w,h,texData.glTypeInternal , glFormat, glType);
+			ofTexture::allocate(w,h,texData.glInternalFormat, glFormat, glType);
 		}
 	}
 	
@@ -293,5 +295,7 @@ void ofxCubeTexture::loadData(const void * data_positive_x, const void * data_ne
 	// unbind texture target by binding 0
 	glBindTexture(texData.textureTarget, 0);
 	
+
 	generateMipmap();
+	setTextureMinMagFilter(GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
 }
